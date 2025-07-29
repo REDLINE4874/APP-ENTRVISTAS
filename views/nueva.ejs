@@ -2,9 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registrar Nueva Entrevista</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css"> <!-- CSS personalizado -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <%- include('partials/navbar', {basePath, currentPath: '/nueva'}) %>
@@ -17,35 +19,35 @@
       <div class="card-body">
         <form method="POST" action="<%= basePath %>/nueva">
           <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-12 col-md-6">
               <label for="nombre" class="form-label">Nombre completo</label>
               <input type="text" class="form-control" id="nombre" name="nombre" required autofocus>
             </div>
             
-            <div class="col-md-6">
+            <div class="col-12 col-md-6">
               <label for="celular" class="form-label">Celular</label>
               <input type="tel" class="form-control" id="celular" name="celular" required>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
               <label for="fecha" class="form-label">Fecha</label>
               <input type="date" class="form-control" id="fecha" name="fecha" 
                      value="<%= dayjs().format('YYYY-MM-DD') %>" required>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
               <label for="hora" class="form-label">Hora</label>
               <input type="time" class="form-control" id="hora" name="hora" 
                      value="<%= dayjs().format('HH:mm') %>" required>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
               <label for="edad" class="form-label">Edad</label>
               <input type="number" class="form-control" id="edad" name="edad" 
                      min="18" max="99" required>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-12 col-md-3">
               <label for="campania" class="form-label">Campaña</label>
               <select class="form-select" id="campania" name="campania" required>
                 <option value="" selected disabled>Seleccione...</option>
@@ -62,11 +64,11 @@
               <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
             </div>
             
-            <div class="col-12 mt-4">
-              <button type="submit" class="btn btn-primary px-4">
+            <div class="col-12 mt-4 d-flex flex-column flex-md-row gap-2">
+              <button type="submit" class="btn btn-primary px-4 w-100 w-md-auto">
                 <i class="bi bi-save"></i> Registrar
               </button>
-              <a href="<%= basePath %>" class="btn btn-outline-secondary ms-2">
+              <a href="<%= basePath %>" class="btn btn-outline-secondary w-100 w-md-auto">
                 <i class="bi bi-arrow-left"></i> Volver
               </a>
             </div>
@@ -79,6 +81,5 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"></script>
 </body>
 </html>
