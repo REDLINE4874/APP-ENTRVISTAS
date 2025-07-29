@@ -1,111 +1,155 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entrevistas Hoy</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-  <%- include('partials/navbar', {basePath, currentPath: '/'}) %>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Entrevistas Hoy</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar', {basePath, currentPath: '/'}) %>
 
-  <div class="container mt-4">
-    <!-- Toast para notificaciones -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">Sistema</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div class="container mt-4">
+      <!-- Toast para notificaciones -->
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div
+          id="liveToast"
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto">Sistema</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body" id="toastMessage"></div>
         </div>
-        <div class="toast-body" id="toastMessage"></div>
       </div>
-    </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1>Entrevistas del día</h1>
-      <div>
-        <a href="<%= basePath %>/nueva" class="btn btn-primary me-2">
-          <i class="bi bi-plus-circle"></i> Nueva Entrevista
-        </a>
-        <a href="<%= basePath %>/todos" class="btn btn-secondary">
-          <i class="bi bi-list-ul"></i> Ver Todas
-        </a>
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2"
+      >
+        <h1 class="mb-0">Entrevistas del día</h1>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="<%= basePath %>/nueva" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nueva Entrevista
+          </a>
+          <a href="<%= basePath %>/todos" class="btn btn-secondary">
+            <i class="bi bi-list-ul"></i> Ver Todas
+          </a>
+        </div>
       </div>
-    </div>
 
-    <!-- Buscador -->
-    <div class="mb-3">
-      <input type="text" id="searchInput" class="form-control" placeholder="Buscar entrevistas...">
-    </div>
+      <!-- Buscador -->
+      <div class="mb-3">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control"
+          placeholder="Buscar entrevistas..."
+        />
+      </div>
 
-    <!-- Paginación superior -->
-    <% if (pagination.totalItems > pagination.limit) { %>
+      <!-- Paginación superior -->
+      <% if (pagination.totalItems > pagination.limit) { %>
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
           <% if (pagination.page > 1) { %>
-            <li class="page-item">
-              <a class="page-link" href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %>">Anterior</a>
-            </li>
-          <% } %>
-          
-          <% for (let i = 1; i <= pagination.totalPages; i++) { %>
-            <li class="page-item <%= i === pagination.page ? 'active' : '' %>">
-              <a class="page-link" href="?page=<%= i %>&limit=<%= pagination.limit %>"><%= i %></a>
-            </li>
-          <% } %>
-          
-          <% if (pagination.page < pagination.totalPages) { %>
-            <li class="page-item">
-              <a class="page-link" href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %>">Siguiente</a>
-            </li>
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %>"
+              >Anterior</a
+            >
+          </li>
+          <% } %> <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+          <li class="page-item <%= i === pagination.page ? 'active' : '' %>">
+            <a
+              class="page-link"
+              href="?page=<%= i %>&limit=<%= pagination.limit %>"
+              ><%= i %></a
+            >
+          </li>
+          <% } %> <% if (pagination.page < pagination.totalPages) { %>
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %>"
+              >Siguiente</a
+            >
+          </li>
           <% } %>
         </ul>
       </nav>
-    <% } %>
-
-    <% if (entrevistas.length === 0) { %>
+      <% } %> <% if (entrevistas.length === 0) { %>
       <div class="alert alert-info">
         No hay entrevistas programadas para hoy.
-        <a href="<%= basePath %>/nueva" class="alert-link">¿Agregar una nueva?</a>
+        <a href="<%= basePath %>/nueva" class="alert-link"
+          >¿Agregar una nueva?</a
+        >
       </div>
-    <% } else { %>
+      <% } else { %>
       <div class="table-responsive">
         <table class="table table-striped table-hover">
           <thead class="table-dark">
             <tr>
               <th>Nombre</th>
               <th>Celular</th>
-              <th>Fecha</th>
+              <th class="d-none d-sm-table-cell">Fecha</th>
               <th>Hora</th>
-              <th>Edad</th>
-              <th>Campaña</th>
-              <th>Observaciones</th>
+              <th class="d-none d-md-table-cell">Edad</th>
+              <th class="d-none d-lg-table-cell">Campaña</th>
+              <th class="d-none d-lg-table-cell">Observaciones</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <% entrevistas.forEach(e => { %>
-              <tr data-id="<%= e.id %>">
-                <td><%= e.nombre %></td>
-                <td><%= e.celular %></td>
-                <td><%= dayjs(e.fecha).format('DD/MM/YYYY') %></td>
-                <td><%= e.hora %></td>
-                <td><%= e.edad %></td>
-                <td><%= e.campania %></td>
-                <td><%= e.observaciones || '--' %></td>
-                <td class="text-nowrap">
-                  <button class="btn btn-sm <%= e.completada ? 'btn-success' : 'btn-outline-success' %> estado-btn" 
-                          data-estado="1" data-id="<%= e.id %>">
+            <tr data-id="<%= e.id %>">
+              <td><%= e.nombre %></td>
+              <td><%= e.celular %></td>
+              <td class="d-none d-sm-table-cell">
+                <%= dayjs(e.fecha).format('DD/MM/YYYY') %>
+              </td>
+              <td><%= e.hora %></td>
+              <td class="d-none d-md-table-cell"><%= e.edad %></td>
+              <td class="d-none d-lg-table-cell"><%= e.campania %></td>
+              <td class="d-none d-lg-table-cell">
+                <%= e.observaciones || '--' %>
+              </td>
+              <td>
+                <div class="d-flex flex-column flex-md-row gap-1">
+                  <button
+                    class="btn btn-sm <%= e.completada ? 'btn-success' : 'btn-outline-success' %> estado-btn"
+                    data-estado="1"
+                    data-id="<%= e.id %>"
+                  >
                     <i class="bi bi-check-circle"></i> Llegó
                   </button>
-                  <button class="btn btn-sm <%= !e.completada ? 'btn-danger' : 'btn-outline-danger' %> estado-btn ms-1" 
-                          data-estado="0" data-id="<%= e.id %>">
+                  <button
+                    class="btn btn-sm <%= !e.completada ? 'btn-danger' : 'btn-outline-danger' %> estado-btn"
+                    data-estado="0"
+                    data-id="<%= e.id %>"
+                  >
                     <i class="bi bi-x-circle"></i> No llegó
                   </button>
-                </td>
-              </tr>
+                </div>
+              </td>
+            </tr>
             <% }); %>
           </tbody>
         </table>
@@ -113,100 +157,122 @@
 
       <!-- Paginación inferior -->
       <% if (pagination.totalItems > pagination.limit) { %>
-        <nav aria-label="Page navigation">
-          <ul class="pagination justify-content-center">
-            <% if (pagination.page > 1) { %>
-              <li class="page-item">
-                <a class="page-link" href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %>">Anterior</a>
-              </li>
-            <% } %>
-            
-            <% for (let i = 1; i <= pagination.totalPages; i++) { %>
-              <li class="page-item <%= i === pagination.page ? 'active' : '' %>">
-                <a class="page-link" href="?page=<%= i %>&limit=<%= pagination.limit %>"><%= i %></a>
-              </li>
-            <% } %>
-            
-            <% if (pagination.page < pagination.totalPages) { %>
-              <li class="page-item">
-                <a class="page-link" href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %>">Siguiente</a>
-              </li>
-            <% } %>
-          </ul>
-        </nav>
-      <% } %>
-    <% } %>
-  </div>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <% if (pagination.page > 1) { %>
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %>"
+              >Anterior</a
+            >
+          </li>
+          <% } %> <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+          <li class="page-item <%= i === pagination.page ? 'active' : '' %>">
+            <a
+              class="page-link"
+              href="?page=<%= i %>&limit=<%= pagination.limit %>"
+              ><%= i %></a
+            >
+          </li>
+          <% } %> <% if (pagination.page < pagination.totalPages) { %>
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %>"
+              >Siguiente</a
+            >
+          </li>
+          <% } %>
+        </ul>
+      </nav>
+      <% } %> <% } %>
+    </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-  
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Configuración del toast
-    const toastEl = document.getElementById('liveToast');
-    const toastMessage = document.getElementById('toastMessage');
-    const toast = new bootstrap.Toast(toastEl);
-    
-    // Búsqueda en tiempo real
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const searchTerm = this.value.toLowerCase();
-      const rows = document.querySelectorAll('tbody tr');
-      
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchTerm) ? '' : 'none';
-      });
-    });
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
-    // Manejador para los botones de estado
-    document.querySelectorAll('.estado-btn').forEach(button => {
-      button.addEventListener('click', async function() {
-        const id = this.dataset.id;
-        const estado = this.dataset.estado;
-        const fila = this.closest('tr');
-        const botones = fila.querySelectorAll('.estado-btn');
-        
-        try {
-          const response = await fetch(`<%= basePath %>/completar/${id}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ estado })
-          });
-          
-          const data = await response.json();
-          
-          if(data.success) {
-            // Actualizar estilos de los botones
-            botones.forEach(btn => {
-              if(btn.dataset.estado === estado) {
-                // Botón activo
-                btn.classList.remove(estado === '1' ? 'btn-outline-success' : 'btn-outline-danger');
-                btn.classList.add(estado === '1' ? 'btn-success' : 'btn-danger');
-              } else {
-                // Botón inactivo
-                btn.classList.remove(estado === '1' ? 'btn-danger' : 'btn-success');
-                btn.classList.add(estado === '1' ? 'btn-outline-danger' : 'btn-outline-success');
-              }
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Configuración del toast
+        const toastEl = document.getElementById("liveToast");
+        const toastMessage = document.getElementById("toastMessage");
+        const toast = new bootstrap.Toast(toastEl);
+
+        // Búsqueda en tiempo real
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll("tbody tr");
+
+            rows.forEach((row) => {
+              const text = row.textContent.toLowerCase();
+              row.style.display = text.includes(searchTerm) ? "" : "none";
             });
-            
-            // Mostrar notificación
-            toastMessage.textContent = estado === '1' 
-              ? 'Entrevista marcada como "Llegó"' 
-              : 'Entrevista marcada como "No llegó"';
-            toast.show();
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          toastMessage.textContent = 'Error al actualizar el estado';
-          toast.show();
-        }
+          });
+
+        // Manejador para los botones de estado
+        document.querySelectorAll(".estado-btn").forEach((button) => {
+          button.addEventListener("click", async function () {
+            const id = this.dataset.id;
+            const estado = this.dataset.estado;
+            const fila = this.closest("tr");
+            const botones = fila.querySelectorAll(".estado-btn");
+
+            try {
+              const response = await fetch(`<%= basePath %>/completar/${id}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ estado }),
+              });
+
+              const data = await response.json();
+
+              if (data.success) {
+                // Actualizar estilos de los botones
+                botones.forEach((btn) => {
+                  if (btn.dataset.estado === estado) {
+                    // Botón activo
+                    btn.classList.remove(
+                      estado === "1"
+                        ? "btn-outline-success"
+                        : "btn-outline-danger"
+                    );
+                    btn.classList.add(
+                      estado === "1" ? "btn-success" : "btn-danger"
+                    );
+                  } else {
+                    // Botón inactivo
+                    btn.classList.remove(
+                      estado === "1" ? "btn-danger" : "btn-success"
+                    );
+                    btn.classList.add(
+                      estado === "1"
+                        ? "btn-outline-danger"
+                        : "btn-outline-success"
+                    );
+                  }
+                });
+
+                // Mostrar notificación
+                toastMessage.textContent =
+                  estado === "1"
+                    ? 'Entrevista marcada como "Llegó"'
+                    : 'Entrevista marcada como "No llegó"';
+                toast.show();
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              toastMessage.textContent = "Error al actualizar el estado";
+              toast.show();
+            }
+          });
+        });
       });
-    });
-  });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
