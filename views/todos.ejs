@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Historial de Entrevistas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/navbar', {basePath, currentPath: '/todos'}) %>
+  
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Historial de entrevistas</h1>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filtroModal">
+        <i class="bi bi-funnel"></i> Filtrar
+      </button>
+    </div>
+
+    <!-- Modal de Filtro -->
+    <div class="modal fade" id="filtroModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Filtrar entrevistas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="GET" action="<%= basePath %>/todos">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Fecha desde:</label>
+                <input type="date" name="fechaInicio" class="form-control" value="<%= fechaInicio || '' %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Fecha hasta:</label>
+                <input type="date" name="fechaFin" class="form-control" value="<%= fechaFin || '' %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Estado:</label>
+                <select name="estado" class="form-select">
+                  <option value="">Todos</option>
+                  <option value="1" <%= estado === '1' ? 'selected' : '' %>>Llegó</option>
+                  <option value="0" <%= estado === '0' ? 'selected' : '' %>>No llegó</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+              <a href="<%= basePath %>/todos" class="btn btn-outline-secondary">Limpiar</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <% if (Object.keys(entrevistasAgrupadas).length > 0) { %>
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card text-white bg-success">
+            <div class="card-body">
+              <h5 class="card-title">Asistencia</h5>
+              <p class="card-text h4"><%= estadisticas.asistencia %>%</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-primary">
+            <div class="card-body">
+              <h5 class="card-title">Total entrevistas</h5>
+              <p class="card-text h4"><%= estadisticas.total %></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-danger">
+            <div class="card-body">
+              <h5 class="card-title">No asistieron</h5>
+              <p class="card-text h4"><%= estadisticas.noAsistencia %>%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Listado de entrevistas -->
+    <% if (Object.keys(entrevistasAgrupadas).length === 0) { %>
+      <div class="alert alert-info">No hay entrevistas registradas con los filtros aplicados</div>
+    <% } else { %>
+      <% for (const fecha in entrevistasAgrupadas) { %>
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h3 class="mb-0"><%= dayjs(fecha).format('dddd, D [de] MMMM [de] YYYY') %></h3>
+            <span class="badge bg-light text-dark">
+              <%= entrevistasAgrupadas[fecha].length %> entrevistas
+            </span>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Celular</th>
+                    <th>Hora</th>
+                    <th>Edad</th>
+                    <th>Campaña</th>
+                    <th>Estado</th>
+                    <th>Observaciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% entrevistasAgrupadas[fecha].forEach(e => { %>
+                    <tr>
+                      <td><%= e.nombre %></td>
+                      <td><%= e.celular %></td>
+                      <td><%= e.hora %></td>
+                      <td><%= e.edad %></td>
+                      <td><%= e.campania %></td>
+                      <td>
+                        <% if (e.completada === 1) { %>
+                          <span class="badge bg-success"><i class="bi bi-check-circle"></i> Llegó</span>
+                        <% } else { %>
+                          <span class="badge bg-danger"><i class="bi bi-x-circle"></i> No llegó</span>
+                        <% } %>
+                      </td>
+                      <td><%= e.observaciones || '--' %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/es.js"></script>
+  <script>
+    // Configurar dayjs en español
+    dayjs.locale('es');
+  </script>
+</body>
+</html>
